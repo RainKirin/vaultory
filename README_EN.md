@@ -1,13 +1,10 @@
-# Password Manager 3.1
+# Vaultory
 
-A secure, lightweight desktop password management application built with Tauri + React + Rust.
+A secure, lightweight local desktop password manager built with Tauri + React + Rust.
 
-## Versions
+## Version
 
-| Version | Description |
-|---------|-------------|
-| **Local** | Pure local storage, data saved in local SQLite database, no network required |
-| **GitHub** | Supports data sync via GitHub, suitable for multi-device usage |
+This repository contains the local edition: data is stored only in a local SQLite database and no network connection is required.
 
 ## Features
 
@@ -34,7 +31,7 @@ A secure, lightweight desktop password management application built with Tauri +
 
 ### Direct Usage
 
-Double-click `password-manager.exe` to run.
+Run the executable from the release package to start the app.
 
 On first launch, you need to set a master password. Please keep it safe, **data cannot be recovered if lost**.
 
