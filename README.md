@@ -1,5 +1,7 @@
 # 玄匣 Vaultory
 
+[English](README_EN.md)
+
 安全、轻量的本地密码管理桌面应用，基于 Tauri + React + Rust 构建。
 
 ## 版本说明

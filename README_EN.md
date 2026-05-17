@@ -1,5 +1,7 @@
 # Vaultory
 
+[中文](README.md)
+
 A secure, lightweight local desktop password manager built with Tauri + React + Rust.
 
 ## Version
