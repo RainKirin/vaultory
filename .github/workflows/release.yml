@@ -1,0 +1,81 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    name: Build, hash & publish release
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Setup Perl (required by vendored OpenSSL for SQLCipher)
+        uses: shogo82148/actions-setup-perl@v1
+        with:
+          perl-version: "5.38"
+
+      - name: Rust dependency cache
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: "src-tauri -> target"
+
+      - name: Install npm deps
+        run: npm ci
+
+      - name: Build Tauri app (with bundles)
+        run: npx tauri build
+
+      - name: Collect artifacts and generate SHA256
+        shell: pwsh
+        run: |
+          $artifacts = New-Item -ItemType Directory -Force -Path artifacts
+
+          # 主二进制
+          $exe = Get-ChildItem -Path src-tauri/target/release -Filter "password-manager.exe" -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
+          if ($exe) {
+            Copy-Item $exe.FullName -Destination (Join-Path $artifacts.FullName "password-manager.exe")
+            Write-Host "Copied executable: $($exe.FullName)"
+          } else {
+            Write-Host "::warning::password-manager.exe 未找到"
+          }
+
+          # 安装包 (NSIS / MSI 由 tauri.conf.json bundle.targets='all' 决定)
+          Get-ChildItem -Path src-tauri/target/release/bundle -Recurse -ErrorAction SilentlyContinue |
+            Where-Object { $_.Extension -in '.exe', '.msi' } |
+            ForEach-Object {
+              Copy-Item $_.FullName -Destination $artifacts.FullName
+              Write-Host "Copied installer: $($_.FullName)"
+            }
+
+          # 为每个产物生成 sha256sum 兼容格式 (hash  filename)
+          Get-ChildItem $artifacts.FullName -File | Where-Object { -not $_.Name.EndsWith('.sha256') } | ForEach-Object {
+            $hash = (Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLower()
+            $line = "$hash  $($_.Name)"
+            $line | Out-File -Encoding ascii (Join-Path $artifacts.FullName "$($_.Name).sha256")
+            Write-Host "SHA256 $($_.Name) = $hash"
+          }
+
+          Write-Host "`nFinal artifact list:"
+          Get-ChildItem $artifacts.FullName | Format-Table Name, Length
+
+      - name: Upload to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: artifacts/*
+          generate_release_notes: true
+          fail_on_unmatched_files: true

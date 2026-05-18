@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+      - "feature/**"
+  pull_request:
+
+jobs:
+  test:
+    name: Test & Build (Windows)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Setup Perl (required by vendored OpenSSL for SQLCipher)
+        uses: shogo82148/actions-setup-perl@v1
+        with:
+          perl-version: "5.38"
+
+      - name: Rust dependency cache
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: "src-tauri -> target"
+
+      - name: Install npm deps
+        run: npm ci
+
+      - name: Rust unit tests (includes SQLCipher migration test)
+        working-directory: src-tauri
+        run: cargo test --release
+
+      - name: Frontend tests
+        run: npm test
+
+      - name: Build Tauri app (no bundling)
+        run: npx tauri build --no-bundle
