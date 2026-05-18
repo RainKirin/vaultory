@@ -10,7 +10,8 @@ tauri-build = { version = "2", features = [] }
 tauri = { version = "2", features = [] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
-rusqlite = { version = "0.31", features = ["bundled"] }
+rusqlite = { version = "0.31", features = ["bundled-sqlcipher-vendored-openssl"] }
+hex = "0.4"
 aes-gcm = { version = "0.10", features = ["zeroize"] }
 argon2 = "0.5"
 rand = "0.8"

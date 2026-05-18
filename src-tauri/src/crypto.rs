@@ -103,6 +103,15 @@ pub fn generate_salt() -> [u8; 32] {
     salt
 }
 
+/// 把 32 字节密钥格式化为 SQLCipher 接受的十六进制字面量。
+///
+/// 使用 `x'...'` 格式时 SQLCipher 跳过其内部 PBKDF2 派生，直接把这 32 字节
+/// 作为 AES 主密钥使用。这样整库加密的密钥强度由我们外层的 Argon2id 决定，
+/// 而不是 SQLCipher 内置的 PBKDF2。
+pub fn format_sqlcipher_key_hex(key: &[u8; 32]) -> String {
+    format!("x'{}'", hex::encode(key))
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -128,5 +137,21 @@ mod tests {
         assert_eq!(ARGON2_T_COST, 2);
         assert_eq!(ARGON2_P_COST, 1);
         let _ = argon2_instance();
+    }
+
+    #[test]
+    fn format_sqlcipher_key_hex_should_produce_valid_raw_key_literal() {
+        let key: [u8; 32] = [
+            0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xaa, 0xbb, 0xcc, 0xdd,
+            0xee, 0xff, 0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef, 0xfe, 0xdc, 0xba, 0x98,
+            0x76, 0x54, 0x32, 0x10,
+        ];
+        let literal = format_sqlcipher_key_hex(&key);
+        assert!(literal.starts_with("x'") && literal.ends_with('\''));
+        assert_eq!(literal.len(), 64 + 3);
+        assert_eq!(
+            literal,
+            "x'00112233445566778899aabbccddeeff0123456789abcdeffedcba9876543210'"
+        );
     }
 }

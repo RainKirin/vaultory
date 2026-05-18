@@ -8,7 +8,7 @@ mod models;
 
 use commands::*;
 use db::Database;
-use std::{error::Error, io, path::PathBuf, sync::Mutex};
+use std::{error::Error, path::PathBuf, sync::Mutex};
 use tauri::Manager;
 
 fn main() {
@@ -30,7 +30,9 @@ fn run() -> Result<(), Box<dyn Error>> {
             std::fs::create_dir_all(&app_dir)?;
 
             let db_path = app_dir.join("vault.db");
-            let database = Database::new(&db_path).map_err(io::Error::other)?;
+            // 启动阶段不打开数据库——SQLCipher 整库加密之后必须等用户提供主密码
+            // 才能派生密钥并解锁。这样进程内任何时刻都不存在未解锁的连接。
+            let database = Database::new(db_path);
 
             app.manage(AppState {
                 db: database,
