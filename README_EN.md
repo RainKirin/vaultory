@@ -16,8 +16,8 @@ Open the [Releases](https://github.com/RainKirin/vaultory/releases) page and dow
 
 | File | Purpose |
 | --- | --- |
-| `Password Manager_1.0.0_x64-setup.exe` | Recommended for most Windows users; double-click to install |
-| `Password Manager_1.0.0_x64_en-US.msi` | MSI package for environments that require MSI installers |
+| `Password.Manager_1.0.0_x64-setup.exe` | Recommended for most Windows users; double-click to install |
+| `Password.Manager_1.0.0_x64_en-US.msi` | MSI package for environments that require MSI installers |
 | `password-manager.exe` | Portable executable; download and run directly |
 | `SHA256SUMS-v1.0.0.txt` | Checksums for verifying downloaded files |
 
@@ -28,7 +28,7 @@ System requirements: Windows 10/11 x64. The app is built with Tauri and requires
 After downloading `SHA256SUMS-v1.0.0.txt`, verify the installer with PowerShell:
 
 ```powershell
-Get-FileHash "Password Manager_1.0.0_x64-setup.exe" -Algorithm SHA256
+Get-FileHash "Password.Manager_1.0.0_x64-setup.exe" -Algorithm SHA256
 ```
 
 Compare the hash with the matching line in `SHA256SUMS-v1.0.0.txt`. If the values do not match, download the file again and do not run it.

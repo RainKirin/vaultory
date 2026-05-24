@@ -16,8 +16,8 @@
 
 | 文件 | 用途 |
 | --- | --- |
-| `Password Manager_1.0.0_x64-setup.exe` | 推荐给大多数 Windows 用户，双击安装 |
-| `Password Manager_1.0.0_x64_en-US.msi` | 适合需要 MSI 安装包的环境 |
+| `Password.Manager_1.0.0_x64-setup.exe` | 推荐给大多数 Windows 用户，双击安装 |
+| `Password.Manager_1.0.0_x64_en-US.msi` | 适合需要 MSI 安装包的环境 |
 | `password-manager.exe` | 免安装可执行文件，下载后直接运行 |
 | `SHA256SUMS-v1.0.0.txt` | 用于校验下载文件是否完整 |
 
@@ -28,7 +28,7 @@
 下载 `SHA256SUMS-v1.0.0.txt` 后，可用 PowerShell 校验安装包：
 
 ```powershell
-Get-FileHash "Password Manager_1.0.0_x64-setup.exe" -Algorithm SHA256
+Get-FileHash "Password.Manager_1.0.0_x64-setup.exe" -Algorithm SHA256
 ```
 
 把输出的哈希值与 `SHA256SUMS-v1.0.0.txt` 中对应文件的值比较。如果不一致，请重新下载，不要运行该文件。
