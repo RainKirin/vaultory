@@ -18,10 +18,12 @@ Open the [Releases](https://github.com/RainKirin/vaultory/releases) page and dow
 | --- | --- |
 | `Password.Manager_1.0.0_x64-setup.exe` | Recommended for most Windows users; double-click to install |
 | `Password.Manager_1.0.0_x64_en-US.msi` | MSI package for environments that require MSI installers |
-| `password-manager.exe` | Portable executable; download and run directly |
+| `password-manager.exe` | Single-file app executable; run directly without an installer |
 | `SHA256SUMS-v1.0.0.txt` | Checksums for verifying downloaded files |
 
 System requirements: Windows 10/11 x64. The app is built with Tauri and requires the WebView2 Runtime; recent Windows 10/11 installations usually include it.
+
+Note: `password-manager.exe` does not require an installer, but it is not a fully portable/green app. It still depends on the system WebView2 Runtime and stores vault data at `%APPDATA%\com.password-manager.app\vault.db`.
 
 ### Verify Downloads
 

@@ -18,10 +18,12 @@
 | --- | --- |
 | `Password.Manager_1.0.0_x64-setup.exe` | 推荐给大多数 Windows 用户，双击安装 |
 | `Password.Manager_1.0.0_x64_en-US.msi` | 适合需要 MSI 安装包的环境 |
-| `password-manager.exe` | 免安装可执行文件，下载后直接运行 |
+| `password-manager.exe` | 单文件应用程序，无需安装器；下载后可直接运行 |
 | `SHA256SUMS-v1.0.0.txt` | 用于校验下载文件是否完整 |
 
 系统要求：Windows 10/11 x64。应用基于 Tauri，需要 WebView2 Runtime；较新的 Windows 10/11 通常已预装。
+
+说明：`password-manager.exe` 不需要运行安装程序，但它不是完全绿色便携版。运行时仍依赖系统 WebView2 Runtime，并会把保险库数据写入 `%APPDATA%\com.password-manager.app\vault.db`。
 
 ### 校验下载文件
 
